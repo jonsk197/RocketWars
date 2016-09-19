@@ -11,10 +11,11 @@ var starGuy = {
     },
 
     preload: function() {
-        this.load.image('sky', 'assets/images/sky.png');
+        this.load.image('background', 'assets/images/background.png');
         this.load.image('ground', 'assets/images/platform.png');
+        this.load.image('lava', 'assets/images/lava.png');
         this.load.image('star', 'assets/images/star.png');
-        this.load.spritesheet('dude', 'assets/images/dude.png', 32, 48);
+        this.load.spritesheet('dude', 'assets/images/sprite_short_man.png', 35 ,50);
     },
 
     create: function() {
@@ -22,7 +23,7 @@ var starGuy = {
         this.physics.startSystem(Phaser.Physics.ARCADE);
 
         //  A simple background for our game
-        this.add.sprite(0, 0, 'sky');
+        this.add.sprite(0, 0, 'background');
 
         //  The platforms group contains the ground and the 2 ledges we can jump on
         platforms = this.add.group();
@@ -31,7 +32,7 @@ var starGuy = {
         platforms.enableBody = true;
 
         // Here we create the ground.
-        var ground = platforms.create(0, this.world.height - 64, 'ground');
+        var ground = platforms.create(0, this.world.height - 50, 'lava');
 
         //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
         ground.scale.setTo(2, 2);
@@ -58,8 +59,8 @@ var starGuy = {
         player.body.collideWorldBounds = true;
 
         //  Our two animations, walking left and right.
-        player.animations.add('left', [0, 1, 2, 3], 10, true);
-        player.animations.add('right', [5, 6, 7, 8], 10, true);
+        player.animations.add('left', [0], 10, true);
+        player.animations.add('right', [2], 10, true);
 
         //  Finally some stars to collect
         stars = this.add.group();

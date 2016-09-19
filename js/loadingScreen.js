@@ -2,7 +2,7 @@ var loadingScreen = {
     
     preload: function(){
         this.counter = 0;
-        this.load.image('loading', 'assets/images/loadingScreen.png');
+        this.load.image('loading', 'assets/images/loadingscreen.png');
     },
     
     create: function(){
@@ -15,7 +15,7 @@ var loadingScreen = {
         
     },
     update: function(){
-        if(this.counter == 3){
+        if(this.counter == 1){
             game.state.start('menu');   
         }
     }
