@@ -1,4 +1,4 @@
-var starGuy = {
+var lvlone = {
 
     init: function (){
         var player;
@@ -99,7 +99,7 @@ var starGuy = {
         this.physics.arcade.collide(stars, platforms);
 
         //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-        this.physics.arcade.overlap(player, stars, this.collectStar, null, starGuy);
+        this.physics.arcade.overlap(player, stars, this.collectStar, null, lvlone);
 
         //  Reset the players velocity (movement)
         player.body.velocity.x = 0;

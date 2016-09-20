@@ -18,7 +18,7 @@ var menu = {
     
     startGame: function(){
         console.log("Starting");
-        game.state.start('starGuy');   
+        game.state.start('lvlone');   
     }
 };
     
