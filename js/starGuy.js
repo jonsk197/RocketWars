@@ -3,6 +3,7 @@ var starGuy = {
     init: function (){
         var player;
         var platforms;
+        var lava;
         var cursors;
 
         var stars;
@@ -12,7 +13,8 @@ var starGuy = {
 
     preload: function() {
         this.load.image('background', 'assets/images/background.png');
-        this.load.image('ground', 'assets/images/platform.png');
+        this.load.image('groundSmall', 'assets/images/smallTile.png');
+        this.load.image('groundBig', 'assets/images/bigTile.png');
         this.load.image('lava', 'assets/images/lava.png');
         this.load.image('star', 'assets/images/star.png');
         this.load.spritesheet('dude', 'assets/images/sprite_short_man.png', 35 ,50);
@@ -25,27 +27,31 @@ var starGuy = {
         //  A simple background for our game
         this.add.sprite(0, 0, 'background');
 
-        //  The platforms group contains the ground and the 2 ledges we can jump on
+        //  The platforms group contains the two ledges
         platforms = this.add.group();
+        lava = this.add.group();
 
-        //  We will enable physics for any object that is created in this group
+        //  We will enable physics for the lava
+        lava.enableBody = true;
         platforms.enableBody = true;
 
         // Here we create the ground.
-        var ground = platforms.create(0, this.world.height - 50, 'lava');
-
+        var lava1 = lava.create(0, this.world.height - 50, 'lava');
+        
         //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-        ground.scale.setTo(2, 2);
+        lava1.scale.setTo(2, 2);
 
         //  This stops it from falling away when you jump on it
-        ground.body.immovable = true;
+        lava1.body.immovable = true;
 
         //  Now let's create two ledges
-        var ledge = platforms.create(400, 400, 'ground');
+        var ledge = platforms.create(400, 400, 'groundBig');
+        ledge.body.immovable = true;
+        ledge.scale.setTo(2, 2);
+        
+        ledge = platforms.create(0, 250, 'groundSmall');
         ledge.body.immovable = true;
 
-        ledge = platforms.create(-150, 250, 'ground');
-        ledge.body.immovable = true;
 
         // The player and its settings
         player = this.add.sprite(32, this.world.height - 150, 'dude');
@@ -80,18 +86,16 @@ var starGuy = {
             //  This just gives each star a slightly random bounce value
             star.body.bounce.y = 0.7 + Math.random() * 0.2;
         }
-
-        //  The score
-        scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
-
         //  Our controls.
         cursors = this.input.keyboard.createCursorKeys();
         
     },
 
     update: function() {
-        //  Collide the player and the stars with the platforms
+        //  Collide the player and the stars with the ledges and lava
+        this.physics.arcade.collide(player, lava);
         this.physics.arcade.collide(player, platforms);
+        this.physics.arcade.collide(stars, lava);
         this.physics.arcade.collide(stars, platforms);
 
         //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
