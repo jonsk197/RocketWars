@@ -2,13 +2,16 @@ var lvlone = {
 
     init: function (){
         var player;
+        var bazooka;
         var platforms;
         var lava;
         var cursors;
+        var spaceKey;
 
         var stars;
-        var score = 0;
-        var scoreText;
+        var bullet;
+        var bullets;
+
     },
 
     preload: function() {
@@ -18,6 +21,8 @@ var lvlone = {
         this.load.image('lava', 'assets/images/lava.png');
         this.load.image('star', 'assets/images/star.png');
         this.load.spritesheet('dude', 'assets/images/sprite_short_man.png', 35 ,50);
+        this.load.image('bazooka', 'assets/images/bazooka.png');
+        this.load.image('bullet', 'assets/images/bullet.png');
     },
 
     create: function() {
@@ -74,6 +79,17 @@ var lvlone = {
         //  We will enable physics for any star that is created in this group
         stars.enableBody = true;
 
+        bazooka = this.add.sprite(player.x, player.y, 'bazooka');
+
+        bullets = game.add.group();
+        bullets.enableBody = true;
+        bullets.physicsBodyType = Phaser.Physics.ARCADE;
+
+        bullets.createMultiple(10, 'bullet');
+        bullets.callAll('events.onOutOfBounds.add', 'events.onOutOfBounds', this.resetBullet, this);
+        bullets.setAll('checkWorldBounds', true);
+
+
         //  Here we'll create 12 of them evenly spaced apart
         for (var i = 0; i < 12; i++)
         {
@@ -86,9 +102,10 @@ var lvlone = {
             //  This just gives each star a slightly random bounce value
             star.body.bounce.y = 0.7 + Math.random() * 0.2;
         }
+
         //  Our controls.
         cursors = this.input.keyboard.createCursorKeys();
-        
+        this.spaceKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     },
 
     update: function() {
@@ -125,11 +142,23 @@ var lvlone = {
 
             player.frame = 4;
         }
+        bazooka.x = player.x - 10;
+        bazooka.y = player.y + 20;
         
         //  Allow the player to jump if they are touching the ground.
-        if (cursors.up.isDown && player.body.touching.down)
+        if (cursors.up.isDown)
         {
-            player.body.velocity.y = -350;
+            bazooka.angle += 2;
+        }
+        else if(cursors.down.isDown)
+        {
+            bazooka.angle -=2;
+        }
+
+        if(this.spaceKey.isDown)
+        {
+            console.log("Time to shot!");
+            this.fireBullet();
         }
 
     },
@@ -143,5 +172,19 @@ var lvlone = {
         //score += 10;
         //scoreText.text = 'Score: ' + score;
 
+    },
+    fireBullet: function() {
+        console.log("Fire a bullet!");
+        bullet = bullets.getFirstExists(false);
+
+        if (bullet)
+        {
+            bullet.reset(bazooka.x + 6, bazooka.y - 6);
+            bullet.body.velocity.x = -300;
+        }
+    },
+
+    resetBullet: function (bullet) {
+        bullet.kill();
     }
 };

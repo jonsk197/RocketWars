@@ -10,11 +10,11 @@ var menu = {
         this.add.sprite(0, 0, 'menu');
         //just added "this" - remove if issue
         
-        this.start = this.add.button(150, 210, 'start', this.startGame, this);
+        this.start = this.add.button(150, 100, 'start', this.startGame, this);
         //this.start.onInputOver.add(this.overStart, this);
         //this.start.onInputOut.add(this.outStart, this);
         
-        this.startMultiplayer = this.add.button(150, 270, 'startMultiplayer', this.startMultiplayer, this);
+        this.startMultiplayer = this.add.button(150, 160, 'startMultiplayer', this.startMultiplayer, this);
         //this.lvl.onInputOver.add(this.overMulti, this);
         //this.lvl.onInputOut.add(this.outMulti, this);
 
