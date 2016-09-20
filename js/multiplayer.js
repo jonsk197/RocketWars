@@ -1,4 +1,4 @@
-var starGuy = {
+var multiplayer = {
 
     init: function (){
         var player;
@@ -86,70 +86,11 @@ var starGuy = {
         this.physics.arcade.collide(stars, platforms);
 
         //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-        this.physics.arcade.overlap(player, player2, this.collectStar, null, starGuy);
+        this.physics.arcade.overlap(player, player2, this.collectStar, null, multiplayer);
 
         //  Reset the players angel (movement)
         player.body.angel.x = 0;
-        switch (player){
-        case "player" : 
-            if (cursors.left.isDown)
-        {
-            //  Move to the left
-            player.body.angel.x = player.body.angel.x - 10;
 
-            player.animations.play('left');
-        }
-        else if (cursors.right.isDown)
-        {
-            //  Move to the right
-              player.body.angel.x = player.body.angel.x + 10;
-
-            player.animations.play('right');
-        }
-        else
-        {
-            //  Stand still
-            player.animations.stop();
-
-            player.frame = 4;
-        }
-        
-        //  Allow the player to jump if they are touching the ground.
-        if (cursors.up.isDown && player.body.touching.down)
-        {
-            player.body.velocity.y = -350;
-        }
-        case "player2"
-            if (cursors.left.isDown)
-        {
-            //  Move to the left
-            player2.body.angel.x = player2.body.angel.x - 10;
-
-            player2.animations.play('left');
-        }
-        else if (cursors.right.isDown)
-        {
-            //  Move to the right
-              player2.body.angel.x = player.body.angel.x + 10;
-
-            player2.animations.play('right');
-        }
-        else
-        {
-            //  Stand still
-            player2.animations.stop();
-
-            player2.frame = 4;
-        }
-        
-        //  Allow the player to jump if they are touching the ground.
-        if (cursors.up.isDown && player.body.touching.down)
-        {
-            player.body.velocity.y = -350;
-        }
-
-    },
-}
     },
 
 
