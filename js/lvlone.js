@@ -6,12 +6,11 @@ var lvlone = {
         var platforms;
         var lava;
         var cursors;
-        var spaceKey;
 
         var stars;
         var bullet;
         var bullets;
-
+        var bulletTime;
     },
 
     preload: function() {
@@ -88,7 +87,7 @@ var lvlone = {
         bullets.createMultiple(10, 'bullet');
         bullets.callAll('events.onOutOfBounds.add', 'events.onOutOfBounds', this.resetBullet, this);
         bullets.setAll('checkWorldBounds', true);
-
+        bulletTime = 0;
 
         //  Here we'll create 12 of them evenly spaced apart
         for (var i = 0; i < 12; i++)
@@ -105,7 +104,6 @@ var lvlone = {
 
         //  Our controls.
         cursors = this.input.keyboard.createCursorKeys();
-        this.spaceKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     },
 
     update: function() {
@@ -155,9 +153,9 @@ var lvlone = {
             bazooka.angle -=2;
         }
 
-        if(this.spaceKey.isDown)
+        if(this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
         {
-            console.log("Time to shot!");
+            console.log(bulletTime);
             this.fireBullet();
         }
 
@@ -173,14 +171,17 @@ var lvlone = {
         //scoreText.text = 'Score: ' + score;
 
     },
-    fireBullet: function() {
-        console.log("Fire a bullet!");
-        bullet = bullets.getFirstExists(false);
 
-        if (bullet)
+    fireBullet: function() {
+        if (lvlone.time.now > bulletTime)
         {
-            bullet.reset(bazooka.x + 6, bazooka.y - 6);
-            bullet.body.velocity.x = -300;
+            bullet = bullets.getFirstExists(false);
+            if (bullet)
+            {
+                bullet.reset(bazooka.x + 6, bazooka.y - 6);
+                bullet.body.velocity.x = 300;
+                bulletTime = lvlone.time.now + 500;
+            }
         }
     },
 
