@@ -6,7 +6,7 @@ var lvlone = {
         var platforms;
         var lava;
         var cursors;
-
+        var bricks;
         var bullet;
         var bullets;
         var bulletTime;
@@ -15,8 +15,8 @@ var lvlone = {
 
     preload: function() {
         this.load.image('background', 'assets/images/background.png');
-        this.load.image('groundSmall', 'assets/images/smallTile.png');
-        this.load.image('groundBig', 'assets/images/bigTile.png');
+        this.load.image('smallTile', 'assets/images/smallTile.png');
+        this.load.image('bigTile', 'assets/images/bigTile.png');
         this.load.image('lava', 'assets/images/lava.png');
         this.load.spritesheet('dude', 'assets/images/sprite_short_man.png', 35 ,50);
         this.load.image('bazooka', 'assets/images/bazooka.png');
@@ -42,22 +42,18 @@ var lvlone = {
         var lava1 = lava.create(0, this.world.height - 50, 'lava');
         
         //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-        lava1.scale.setTo(2, 2);
+        lava1.scale.setTo(2, 1);
 
         //  This stops it from falling away when you jump on it
         lava1.body.immovable = true;
 
         //  Now let's create two ledges
-        var ledge = platforms.create(400, 400, 'groundBig');
-        ledge.body.immovable = true;
-        ledge.scale.setTo(2, 2);
         
-        ledge = platforms.create(0, 250, 'groundSmall');
+        ledge = platforms.create(0, 250, 'smallTile');
         ledge.body.immovable = true;
-
 
         // The player and its settings
-        player = this.add.sprite(32, this.world.height - 150, 'dude');
+        player = this.add.sprite(32, this.world.height - 250, 'dude');
 
         //  We need to enable physics on the player
         this.physics.arcade.enable(player);
@@ -76,16 +72,16 @@ var lvlone = {
         bullets = game.add.group();
         bullets.enableBody = true;
         bullets.physicsBodyType = Phaser.Physics.ARCADE;
-
-        bulletGravity = 200;
-
+        bulletGravity= 200;
         bullets.createMultiple(10, 'bullet');
         bullets.callAll('events.onOutOfBounds.add', 'events.onOutOfBounds', this.resetBullet, this);
         bullets.setAll('checkWorldBounds', true);
         bulletTime = 0;
 
+
         //  Our controls.
         cursors = this.input.keyboard.createCursorKeys();
+        this.initBricks();
         
     },
 
@@ -93,7 +89,8 @@ var lvlone = {
         //  Collide the player and the stars with the ledges and lava
         this.physics.arcade.collide(player, lava);
         this.physics.arcade.collide(player, platforms);
-
+        this.physics.arcade.collide(player, bricks);
+       // this.physics.arcade.overlap(bullet, bricks, this.bulletHitBrick, null, lvlone);
         //  Checks to see if the player overlaps with any of the lava, if he does call the gameOver function
         this.physics.arcade.overlap(player, lava, this.gameOver, null, lvlone);
 
@@ -140,6 +137,37 @@ var lvlone = {
         }
 
     },
+
+     initBricks:  function() {
+     
+         brickInfo = {
+            width: 27,
+            height: 27,
+            count: {
+                row: 22,
+                col: 3
+            },
+            offset: {
+                top: 450,
+                left: 10
+            },
+            padding: 10
+        }
+        bricks = game.add.group();
+        for(c=0; c<brickInfo.count.col; c++) {
+            for(r=0; r<brickInfo.count.row; r++) {
+                var brickX = (r*(brickInfo.width+brickInfo.padding))+brickInfo.offset.left;
+                var brickY = (c*(brickInfo.height+brickInfo.padding))+brickInfo.offset.top;
+                newBrick = game.add.sprite(brickX, brickY, 'bigTile');
+                newBrick.scale.setTo(0.5, 0.5);
+                game.physics.enable(newBrick, Phaser.Physics.ARCADE);
+                newBrick.body.immovable = true;
+                newBrick.anchor.set(0.5);
+                bricks.add(newBrick);
+            }
+        }  
+    },
+
     fireBullet: function() {
 
         if (lvlone.time.now > bulletTime)
@@ -149,9 +177,8 @@ var lvlone = {
             {
                 bullet.angle = bazooka.angle
                 bullet.reset(bazooka.x, bazooka.y - 6);
-                bullet.body.gravity.y = bulletGravity;
                 bullet.body.velocity = this.physics.arcade.velocityFromAngle(bullet.angle, 300, bullet.velocity);
-
+                bullet.body.gravity.y=bulletGravity;
                 bulletTime = lvlone.time.now + 500;
             }
         }
@@ -167,5 +194,9 @@ var lvlone = {
         
         // Removes the star from the screen
         player.kill();
-    }
+    },
+    bulletHitBrick:  function (bullet, bricks) {
+        brick.kill();
+        this.resetBullet(bullet);
+    },
 };
