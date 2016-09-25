@@ -10,6 +10,7 @@ var lvlone = {
         var bullet;
         var bullets;
         var bulletTime;
+        var bulletGravity;
     },
 
     preload: function() {
@@ -75,6 +76,8 @@ var lvlone = {
         bullets = game.add.group();
         bullets.enableBody = true;
         bullets.physicsBodyType = Phaser.Physics.ARCADE;
+
+        bulletGravity = 200;
 
         bullets.createMultiple(10, 'bullet');
         bullets.callAll('events.onOutOfBounds.add', 'events.onOutOfBounds', this.resetBullet, this);
@@ -146,6 +149,7 @@ var lvlone = {
             {
                 bullet.angle = bazooka.angle
                 bullet.reset(bazooka.x, bazooka.y - 6);
+                bullet.body.gravity.y = bulletGravity;
                 bullet.body.velocity = this.physics.arcade.velocityFromAngle(bullet.angle, 300, bullet.velocity);
 
                 bulletTime = lvlone.time.now + 500;
