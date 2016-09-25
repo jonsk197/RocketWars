@@ -7,7 +7,6 @@ var lvlone = {
         var lava;
         var cursors;
 
-        var stars;
         var bullet;
         var bullets;
         var bulletTime;
@@ -18,7 +17,6 @@ var lvlone = {
         this.load.image('groundSmall', 'assets/images/smallTile.png');
         this.load.image('groundBig', 'assets/images/bigTile.png');
         this.load.image('lava', 'assets/images/lava.png');
-        this.load.image('star', 'assets/images/star.png');
         this.load.spritesheet('dude', 'assets/images/sprite_short_man.png', 35 ,50);
         this.load.image('bazooka', 'assets/images/bazooka.png');
         this.load.image('bullet', 'assets/images/bullet.png');
@@ -72,12 +70,6 @@ var lvlone = {
         player.animations.add('left', [0], 10, true);
         player.animations.add('right', [2], 10, true);
 
-        //  Finally some stars to collect
-        stars = this.add.group();
-
-        //  We will enable physics for any star that is created in this group
-        stars.enableBody = true;
-
         bazooka = this.add.sprite(player.x, player.y, 'bazooka');
 
         bullets = game.add.group();
@@ -89,32 +81,18 @@ var lvlone = {
         bullets.setAll('checkWorldBounds', true);
         bulletTime = 0;
 
-        //  Here we'll create 12 of them evenly spaced apart
-        for (var i = 0; i < 12; i++)
-        {
-            //  Create a star inside of the 'stars' group
-            var star = stars.create(i * 70, 0, 'star');
-
-            //  Let gravity do its thing
-            star.body.gravity.y = 300;
-
-            //  This just gives each star a slightly random bounce value
-            star.body.bounce.y = 0.7 + Math.random() * 0.2;
-        }
-
         //  Our controls.
         cursors = this.input.keyboard.createCursorKeys();
+        
     },
 
     update: function() {
         //  Collide the player and the stars with the ledges and lava
         this.physics.arcade.collide(player, lava);
         this.physics.arcade.collide(player, platforms);
-        this.physics.arcade.collide(stars, lava);
-        this.physics.arcade.collide(stars, platforms);
 
-        //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-        this.physics.arcade.overlap(player, stars, this.collectStar, null, lvlone);
+        //  Checks to see if the player overlaps with any of the lava, if he does call the gameOver function
+        this.physics.arcade.overlap(player, lava, this.gameOver, null, lvlone);
 
         //  Reset the players velocity (movement)
         player.body.velocity.x = 0;
@@ -155,31 +133,21 @@ var lvlone = {
 
         if(this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
         {
-            console.log(bulletTime);
             this.fireBullet();
         }
 
     },
-
-    collectStar: function(player, star) {
-        
-        // Removes the star from the screen
-        star.kill();
-
-        //  Add and update the score
-        //score += 10;
-        //scoreText.text = 'Score: ' + score;
-
-    },
-
     fireBullet: function() {
+
         if (lvlone.time.now > bulletTime)
         {
             bullet = bullets.getFirstExists(false);
             if (bullet)
             {
-                bullet.reset(bazooka.x + 6, bazooka.y - 6);
-                bullet.body.velocity.x = 300;
+                bullet.angle = bazooka.angle
+                bullet.reset(bazooka.x, bazooka.y - 6);
+                bullet.body.velocity = this.physics.arcade.velocityFromAngle(bullet.angle, 300, bullet.velocity);
+
                 bulletTime = lvlone.time.now + 500;
             }
         }
@@ -187,5 +155,13 @@ var lvlone = {
 
     resetBullet: function (bullet) {
         bullet.kill();
+    },
+
+    gameOver: function(player, lava) {
+        
+        console.log("Game over");
+        
+        // Removes the star from the screen
+        player.kill();
     }
 };
