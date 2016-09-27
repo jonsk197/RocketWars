@@ -68,7 +68,8 @@ var lvlone = {
         player.animations.add('right', [2], 10, true);
 
         bazooka = this.add.sprite(player.x, player.y, 'bazooka');
-
+        bazooka.anchor.setTo(0.5, 0.5);
+        
         bullets = game.add.group();
         bullets.enableBody = true;
         bullets.physicsBodyType = Phaser.Physics.ARCADE;
@@ -118,8 +119,8 @@ var lvlone = {
 
             player.frame = 4;
         }
-        bazooka.x = player.x - 10;
-        bazooka.y = player.y + 20;
+        bazooka.x = player.x + 15;
+        bazooka.y = player.y + 33;
         
         //  Allow the player to jump if they are touching the ground.
         if (cursors.up.isDown)
