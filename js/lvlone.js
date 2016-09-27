@@ -11,14 +11,18 @@ var lvlone = {
         var bullets;
         var bulletTime;
         var bulletGravity;
-    },
+        var target;
+        var life;  
+        },
 
     preload: function() {
         this.load.image('background', 'assets/images/background.png');
         this.load.image('smallTile', 'assets/images/smallTile.png');
         this.load.image('bigTile', 'assets/images/bigTile.png');
         this.load.image('lava', 'assets/images/lava.png');
-        this.load.spritesheet('dude', 'assets/images/sprite_short_man.png', 35 ,50);
+        this.load.spritesheet('player', 'assets/images/sprite_short_man.png', 35 ,50);
+        this.load.spritesheet('target', 'assets/images/sprite_short_man.png', 35 ,50);
+
         this.load.image('bazooka', 'assets/images/bazooka.png');
         this.load.image('bullet', 'assets/images/bullet.png');
     },
@@ -53,12 +57,15 @@ var lvlone = {
         ledge.body.immovable = true;
 
         // The player and its settings
-        player = this.add.sprite(32, this.world.height - 250, 'dude');
-
+        player = this.add.sprite(32, this.world.height - 250, 'player');
+        target = this.add.sprite(600, this.world.height - 250, 'target');
         //  We need to enable physics on the player
         this.physics.arcade.enable(player);
-
+        this.physics.arcade.enable(target);
+        target.body.gravity.y = 300;
+        target.body.collideWorldBounds = true;
         //  Player physics properties. Give the little guy a slight bounce.
+
         player.body.bounce.y = 0.2;
         player.body.gravity.y = 300;
         player.body.collideWorldBounds = true;
@@ -78,7 +85,7 @@ var lvlone = {
         bullets.callAll('events.onOutOfBounds.add', 'events.onOutOfBounds', this.resetBullet, this);
         bullets.setAll('checkWorldBounds', true);
         bulletTime = 0;
-
+        life=5;
 
         //  Our controls.
         cursors = this.input.keyboard.createCursorKeys();
@@ -88,12 +95,14 @@ var lvlone = {
 
     update: function() {
         //  Collide the player and the stars with the ledges and lava
-        this.physics.arcade.collide(player, lava);
         this.physics.arcade.collide(player, platforms);
         this.physics.arcade.collide(player, bricks);
+        this.physics.arcade.collide(target, platforms);
+        this.physics.arcade.collide(target, bricks);
         this.physics.arcade.collide(bricks, bullets, this.bulletHitBrick);
         //  Checks to see if the player overlaps with any of the lava, if he does call the gameOver function
         this.physics.arcade.overlap(player, lava, this.gameOver, null, lvlone);
+        this.physics.arcade.collide(bullets, target, this.hits);
 
         //  Reset the players velocity (movement)
         player.body.velocity.x = 0;
@@ -189,15 +198,35 @@ var lvlone = {
         bullets.kill();
     },
 
+     hits: function(target, bullets){
+        
+        console.log(life);
+        life = life -1;
+        bullets.kill();
+        if (life ==0){
+            target.kill();
+            console.log('next Level');
+            location.reload;
+            game.state.add('menu');
+            game.state.start('menu');
+        }
+
+    },
+
     gameOver: function(player, lava) {
         
         console.log("Game over");
         
         // Removes the star from the screen
         player.kill();
+        bazooka.kill();
+        game.state.start('gameover');
     },
+
     bulletHitBrick:  function (bullets, bricks) {
         bricks.kill();
         bullets.kill();
     },
+
+
 };
