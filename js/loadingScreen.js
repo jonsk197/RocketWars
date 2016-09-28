@@ -8,7 +8,7 @@ var loadingScreen = {
     
     create: function(){
         this.add.sprite(0, 0, 'loading');
-        bazooka = this.add.sprite(32, this.world.height - 220, 'gif');
+        man = this.add.sprite(32, this.world.height - 220, 'gif');
         this.time.events.loop(Phaser.Timer.SECOND, this.updateCounter, this);
     },
     
@@ -18,7 +18,7 @@ var loadingScreen = {
     },
     update: function(){
         if(this.counter == 2){
-            game.state.start('menu');   
+            game.state.start('menu');
         }
     }
 };
