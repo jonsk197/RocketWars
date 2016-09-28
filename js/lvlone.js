@@ -238,9 +238,8 @@ var lvlone = {
         if (life ==0){
             target.kill();
             console.log('next Level');
-            location.reload;
-            game.state.add('menu');
-            game.state.start('menu');
+
+            game.state.start('lvltwo');
         }
 
     },

@@ -25,7 +25,6 @@ var menu = {
     
     startGame: function(){
         console.log("Starting");
-        game.state.remove('menu');
         game.state.start('lvlone');   
     },
 
