@@ -100,6 +100,8 @@ var lvlone = {
         this.physics.arcade.collide(target, platforms);
         this.physics.arcade.collide(target, bricks);
         this.physics.arcade.collide(bricks, bullets, this.bulletHitBrick);
+        this.physics.arcade.overlap(target, lava, this.TargetLava, null, lvlone);
+
         //  Checks to see if the player overlaps with any of the lava, if he does call the gameOver function
         this.physics.arcade.overlap(player, lava, this.gameOver, null, lvlone);
         this.physics.arcade.collide(bullets, target, this.hits);
@@ -220,6 +222,14 @@ var lvlone = {
         // Removes the star from the screen
         player.kill();
         bazooka.kill();
+        game.state.start('gameover');
+    },
+    TargetLava: function(target, lava) {
+        
+        console.log("Target is dead");
+        
+        // Removes the star from the screen
+        target.kill();
         game.state.start('gameover');
     },
 
