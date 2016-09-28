@@ -16,7 +16,6 @@ var gameover = {
         if(this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
         {
             location.reload();
-           // game.state.restart('menu');
         }
     }
 };
