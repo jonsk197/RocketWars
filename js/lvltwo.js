@@ -19,7 +19,7 @@ leltwo = {
         this.load.image('bigTile', 'assets/images/bigTile.png');
         this.load.image('lava', 'assets/images/lava.png');
         this.load.spritesheet('player', 'assets/images/sprite_short_man.png', 35 ,50);
-        this.load.spritesheet('target', 'assets/images/sprite_short_man.png', 35 ,50);
+        this.load.spritesheet('target', 'assets/images/targetBoard.png', 35 ,50);
 
         this.load.image('bazooka', 'assets/images/bazooka.png');
         this.load.image('bullet', 'assets/images/bullet.png');

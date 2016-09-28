@@ -21,7 +21,7 @@ var lvlone = {
         this.load.image('bigTile', 'assets/images/bigTile.png');
         this.load.image('lava', 'assets/images/lava.png');
         this.load.spritesheet('player', 'assets/images/sprite_short_man.png', 35 ,50);
-        this.load.spritesheet('target', 'assets/images/sprite_short_man.png', 35 ,50);
+        this.load.spritesheet('target', 'assets/images/targetBoard.png');
 
         this.load.image('bazooka', 'assets/images/bazooka.png');
         this.load.image('bullet', 'assets/images/bullet.png');
@@ -64,6 +64,7 @@ var lvlone = {
         this.physics.arcade.enable(target);
         target.body.gravity.y = 300;
         target.body.collideWorldBounds = true;
+        target.scale.setTo(0.5, 0.5);
         //  Player physics properties. Give the little guy a slight bounce.
 
         player.body.bounce.y = 0.2;
