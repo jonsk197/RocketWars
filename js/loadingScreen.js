@@ -3,7 +3,7 @@ var loadingScreen = {
     preload: function(){
         this.counter = 0;
         this.load.image('loading', 'assets/images/loadingscreen.png');
-        this.load.image('gif', 'assets/gif/gifman.gif');
+        this.load.image('gif', 'assets/gif/gif_man.gif');
     },
     
     create: function(){
