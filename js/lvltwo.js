@@ -127,8 +127,7 @@ var lvltwo = {
         {
             //  Stand still
             player.animations.stop();
-
-            player.frame = 4;
+            player.frame = 1;
         }
         bazooka.x = player.x + 15;
         bazooka.y = player.y + 33;

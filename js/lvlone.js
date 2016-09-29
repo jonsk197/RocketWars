@@ -49,8 +49,8 @@ var lvlone = {
         player.body.collideWorldBounds = true;
         
         //Our two animations, walking left and right.
-        player.animations.add('left', [0], 10, true);
-        player.animations.add('right', [2], 10, true);
+        player.animations.add('left', [0], 1, true);
+        player.animations.add('right', [2], 1, true);
 
         //The target and its settings
         target = this.add.sprite(600, this.world.height - 250, 'target');
@@ -116,7 +116,7 @@ var lvlone = {
         {
             //Stand still
             player.animations.stop();
-            player.frame = 4;
+            player.frame = 1;
         }
 
         //Set the bazooka's possition on the player
@@ -244,7 +244,7 @@ var lvlone = {
         bricks.kill();
         bullets.kill();
     },
-    
+
     gameOver: function(player, lava) {
         
         console.log("Game over");
