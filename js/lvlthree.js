@@ -1,4 +1,4 @@
-var lvltwo = {
+var lvlthree = {
 
     init: function (){
         var player;
@@ -53,7 +53,7 @@ var lvltwo = {
         player.animations.add('right', [2], 1, true);
 
         //The target and its settings
-        target = this.add.sprite(600, this.world.height - 400, 'target');
+        target = this.add.sprite(600, this.world.height - 250, 'target');
         this.physics.arcade.enable(target);
         target.body.gravity.y = 300;
         target.body.collideWorldBounds = true;
@@ -76,7 +76,7 @@ var lvltwo = {
         //initialize bulletTime
         bulletTime = 0;
         //Set number of lifes for the target
-        life=5;
+        life=2;
 
         // Our controls.
         cursors = this.input.keyboard.createCursorKeys();
@@ -91,21 +91,14 @@ var lvltwo = {
         this.physics.arcade.collide(player, bricks);
         this.physics.arcade.collide(target, bricks);
         this.physics.arcade.collide(bricks, bullets, this.bulletHitBrick);
-        this.physics.arcade.overlap(target, lava, this.targetHitsLava, null, lvltwo);
+        this.physics.arcade.overlap(target, lava, this.targetHitsLava, null, lvlthree);
 
         //Checks to see if the player overlaps with any of the lava, if he does call the gameOver function
-        this.physics.arcade.overlap(player, lava, this.gameOver, null, lvltwo);
-        this.physics.arcade.overlap(bullets, target, this.hits);
+        this.physics.arcade.overlap(player, lava, this.gameOver, null, lvlthree);
+        this.physics.arcade.collide(bullets, target, this.hits);
 
         //Reset the players velocity (movement)
         player.body.velocity.x = 0;
-
-        //Movable target
-        var period = game.time.now * 0.002;
-        var radius = 60;
-        target.x = 600 + Math.cos(period) * radius;
-        target.y = this.world.height - 400 + Math.sin(period) * radius;
- 
 
         if (cursors.left.isDown)
         {
@@ -149,24 +142,25 @@ var lvltwo = {
     },
 
     initBricks:  function() {
-     
+
          brickInfo = {
             width: 27,
             height: 27,
             count: {
                 row: 22,
-                col: 2
+                col: 3
             },
             offset: {
-                top: 490,
+                top: 450,
                 left: 10
             },
             padding: 10
         }
         bricks = game.add.group();
+       
         for(c=0; c<brickInfo.count.col; c++) {
             for(r=0; r<brickInfo.count.row; r++) {
-                var brickX = (r*(brickInfo.width+brickInfo.padding))+brickInfo.offset.left;
+                var brickX = (r*(brickInfo.width+brickInfo.padding))+brickInfo.offset.left +10;
                 var brickY = (c*(brickInfo.height+brickInfo.padding))+brickInfo.offset.top;
                 newBrick = game.add.sprite(brickX, brickY, 'bigTile');
                 newBrick.scale.setTo(0.5, 0.5);
@@ -176,11 +170,39 @@ var lvltwo = {
                 bricks.add(newBrick);
             }
         }  
+            brickInfo = {
+            width: 27,
+            height: 27,
+            count: {
+                row: 2,
+                col: 5,
+            },
+            offset: {
+                top: 250,
+                left: 400,
+            },
+            padding: 10
+        }
+       
+       
+        for(c=0; c<brickInfo.count.col; c++) {
+            for(r=0; r<brickInfo.count.row; r++) {
+                var brickX = (r*(brickInfo.width+brickInfo.padding))+brickInfo.offset.left +10;
+                var brickY = (c*(brickInfo.height+brickInfo.padding))+brickInfo.offset.top;
+                newBrick = game.add.sprite(brickX, brickY, 'bigTile');
+                newBrick.scale.setTo(0.5, 0.5);
+                game.physics.enable(newBrick, Phaser.Physics.ARCADE);
+                newBrick.body.immovable = true;
+                newBrick.anchor.set(0.5);
+                bricks.add(newBrick);
+            }
+        }
     },
    
+
     fireBullet: function() {
 
-        if (lvltwo.time.now > bulletTime)
+        if (lvlthree.time.now > bulletTime)
         {
             bullet = bullets.getFirstExists(false);
             if (bullet)
@@ -189,7 +211,7 @@ var lvltwo = {
                 bullet.reset(bazooka.x, bazooka.y - 6);
                 bullet.body.velocity = this.physics.arcade.velocityFromAngle(bullet.angle, 300, bullet.velocity);
                 bullet.body.gravity.y=bulletGravity;
-                bulletTime = lvltwo.time.now + 500;
+                bulletTime = lvlthree.time.now + 500;
             }
         }
     },
@@ -205,9 +227,12 @@ var lvltwo = {
 
         if (life ==0){
             target.kill();
-            
-            console.log('next Level');
-            game.state.start('lvlthree');        }
+
+            game.state.add('menu');  
+            game.state.start('menu');
+            console.log("Menu-state not set...");
+            location.reload();
+        }
 
     },
 
