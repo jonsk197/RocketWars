@@ -87,6 +87,17 @@ var lvltwo = {
     },
 
     update: function() {
+
+        //Movable target
+        var period = game.time.now * 0.002;
+        var radius = 60;
+        target.x = 600 + Math.cos(period) * radius;
+        target.y = 200 + Math.sin(period) * radius;
+
+        //Set the bazooka's possition on the player
+        bazooka.x = player.x + 15;
+        bazooka.y = player.y + 33;
+
         //Check collisions between player,lava, bricks and bullets 
         this.physics.arcade.collide(player, bricks);
         this.physics.arcade.collide(target, bricks);
@@ -99,13 +110,6 @@ var lvltwo = {
 
         //Reset the players velocity (movement)
         player.body.velocity.x = 0;
-
-        //Movable target
-        var period = game.time.now * 0.002;
-        var radius = 60;
-        target.x = 600 + Math.cos(period) * radius;
-        target.y = this.world.height - 400 + Math.sin(period) * radius;
- 
 
         if (cursors.left.isDown)
         {
@@ -125,10 +129,6 @@ var lvltwo = {
             player.animations.stop();
             player.frame = 1;
         }
-
-        //Set the bazooka's possition on the player
-        bazooka.x = player.x + 15;
-        bazooka.y = player.y + 33;
         
         //Change the angle of the bazooka
         if (cursors.up.isDown)

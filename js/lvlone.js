@@ -13,6 +13,7 @@ var lvlone = {
         var bulletGravity;
         var target;
         var life;  
+        var spacebar;
         },
 
     preload: function() {
@@ -78,9 +79,11 @@ var lvlone = {
         //Set number of lifes for the target
         life=2;
 
+        spacebarJustPressed = false;
+
         // Our controls.
         cursors = this.input.keyboard.createCursorKeys();
-
+        this.spacebar = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         //Add the bricks to the map
         this.initBricks();
         
@@ -133,11 +136,28 @@ var lvlone = {
             bazooka.angle -=2;
         }
 
+        
         //Call the fire a bullet if the spacebar is pressed
         if(this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
         {
-            this.fireBullet();
+            spacebarJustPressed = true;
         }
+
+        if(!this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && spacebarJustPressed)
+        {
+            //Calculate the time the spacebar has been hold down, this to change the force of the bullet.
+            var diff = Math.abs(this.spacebar.timeUp - this.spacebar.timeDown);
+            //console.log("Diff: " + diff);
+
+            this.fireBullet(diff);
+
+            spacebarJustPressed = false;
+        }
+
+    },
+
+    getlength: function(number) {
+    return number.toString().length;
     },
 
     initBricks:  function() {
@@ -171,7 +191,7 @@ var lvlone = {
     },
    
 
-    fireBullet: function() {
+    fireBullet: function(diff) {
 
         if (lvlone.time.now > bulletTime)
         {
@@ -180,7 +200,7 @@ var lvlone = {
             {
                 bullet.angle = bazooka.angle
                 bullet.reset(bazooka.x, bazooka.y - 6);
-                bullet.body.velocity = this.physics.arcade.velocityFromAngle(bullet.angle, 300, bullet.velocity);
+                bullet.body.velocity = this.physics.arcade.velocityFromAngle(bullet.angle, diff, bullet.velocity);
                 bullet.body.gravity.y=bulletGravity;
                 bulletTime = lvlone.time.now + 500;
             }
