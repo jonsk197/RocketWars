@@ -14,7 +14,7 @@ var menu = {
 
     startGame: function(){
         console.log("Starting");
-        game.state.start('lvlone');   
+        game.state.start('mainGame');   
     },
 
     startMultiplayer: function(){
