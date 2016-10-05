@@ -1,5 +1,5 @@
 # RocketWars
-Small prodject for TDDD23 by Jonsk197 & Ammal617
+Small project for TDDD23 by Jonsk197 & Ammal617
 
 
 Installation
