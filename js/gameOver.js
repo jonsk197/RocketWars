@@ -15,10 +15,7 @@ var gameover = {
         
         if(this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
         {
-            game.state.add('menu');  
             game.state.start('menu');
-            console.log("Menu-state not set...");
-            location.reload();
         }
     }
 };

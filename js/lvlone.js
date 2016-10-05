@@ -14,6 +14,9 @@ var lvlone = {
         var target;
         var life;  
         var spacebar;
+        var spacebarJustPressed;
+        var startPressSpaceTime;
+
         },
 
     preload: function() {
@@ -80,6 +83,7 @@ var lvlone = {
         life=2;
 
         spacebarJustPressed = false;
+        startPressSpaceTime = 0;
 
         // Our controls.
         cursors = this.input.keyboard.createCursorKeys();
