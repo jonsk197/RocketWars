@@ -12,8 +12,7 @@ var mainGame = {
         var bulletTime;
         var bulletGravity;
         var target;
-        var life;  
-        var level;
+        var life;
         var spacebar;
         var spacebarJustPressed;
         var startPressSpaceTime;
@@ -81,8 +80,7 @@ var mainGame = {
         //initialize bulletTime
         bulletTime = 0;
         //Set number of lifes for the target
-        life=2;
-        level = 1;
+        life = 1;
 
         spacebarJustPressed = false;
         startPressSpaceTime = 0;
@@ -91,14 +89,35 @@ var mainGame = {
         cursors = this.input.keyboard.createCursorKeys();
         this.spacebar = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         //Add the bricks to the map
-        lvlone.initBricks();
+            
+        if(menu.level == 1){
+            lvlone.initBricks();
+            life = 1;
+        }else if(menu.level == 2)
+        {
+            lvltwo.initBricks();
+            life = 2;
+        }else if(menu.level == 3)
+        {
+            lvlthree.initBricks();
+            life = 3;
+        }else if(menu.level == 4)
+        {
+            lvlfour.initBricks();
+            life = 4;
+        }else if(menu.level == 5)
+        {
+            lvlfive.initBricks();
+            life = 5;
+        }
+
     },
 
     update: function() {
 
-        if(level == 2){
+        if(menu.level == 2 || menu.level == 5){
             //Movable target
-            var period = game.time.now * 0.002;
+            var period = Math.abs(game.time.now * 0.002);
             var radius = 60;
             target.x = 600 + Math.cos(period) * radius;
             target.y = 200 + Math.sin(period) * radius;
@@ -168,6 +187,11 @@ var mainGame = {
             spacebarJustPressed = false;
         }
 
+        if(this.input.keyboard.isDown(Phaser.Keyboard.ESC))
+        {
+            game.state.start('menu');
+        }
+
     },
 
     getlength: function(number) {
@@ -184,7 +208,7 @@ var mainGame = {
                 bullet.angle = bazooka.angle
                 bullet.reset(bazooka.x, bazooka.y - 6);
                 bullet.body.velocity = this.physics.arcade.velocityFromAngle(bullet.angle, diff, bullet.velocity);
-                bullet.body.gravity.y=bulletGravity;
+                bullet.body.gravity.y = bulletGravity;
                 bulletTime = mainGame.time.now + 500;
             }
         }
@@ -200,23 +224,42 @@ var mainGame = {
         bullets.kill();
 
         if (life ==0){
-            console.log('next Level');
+            console.log('next level! Level completted:' +  menu.level);
 
-            if(level == 1){
+            if(menu.level == 1){
                 console.log('Start level 2');
                 lvlone.killBricks();
                 lvltwo.initBricks();
                 life = 2;
-                level++;
-            }else if(level == 2)
+            }else if(menu.level == 2)
             {
                 console.log('Start level 3');
                 lvltwo.killBricks();
                 lvlthree.initBricks();
-                life = 2;
-                level++;
+                life = 3;
+            }else if(menu.level == 3)
+            {
+                console.log('Start level 4');
+                lvlthree.killBricks();
+                lvlfour.initBricks();
+                life = 4;
+            }else if(menu.level == 4)
+            {
+                console.log('Start level 5');
+                lvlfour.killBricks();
+                lvlfive.initBricks();
+                life = 5;
+            }else if(menu.level == 5)
+            {
+                game.state.start('menu');
             }
-
+            menu.level++;
+            player.x = 32;
+            player.y = 350;
+            target.x = 600;
+            target.y = 200;
+            target.body.velocity.x = 0; 
+            target.body.velocity.y = 0;
         }
     },
 

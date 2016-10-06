@@ -13,7 +13,7 @@ var gameover = {
     
     update: function(){
         
-        if(this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
+        if(this.input.keyboard.isDown(Phaser.Keyboard.ESC))
         {
             game.state.start('menu');
         }

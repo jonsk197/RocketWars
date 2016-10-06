@@ -1,5 +1,4 @@
 var menu = {
-
     preload: function() {
         game.load.image('menu', 'assets/images/background.png');   
         game.load.spritesheet('start', 'assets/images/buttonStart.png');
@@ -10,6 +9,7 @@ var menu = {
     },
 
     create: function() {
+        var level = 1;
         this.add.sprite(0, 0, 'menu');
         start = this.add.button(150, 100, 'start', this.startGame, this);
         chooseLevel = this.add.button(150,160,'chooseLevel' , this.chooseLevel, this);
@@ -20,6 +20,7 @@ var menu = {
 
     startGame: function(){
         console.log("Starting");
+        menu.level = 1;
         game.state.start('mainGame');   
     },
 

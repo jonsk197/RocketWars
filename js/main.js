@@ -5,6 +5,8 @@ game.state.add('credits', credits);
 game.state.add('chooseLevel', chooseLevel);
 game.state.add('gameover', gameover);
 game.state.add('menu', menu);
+game.state.add('lvlfive', lvlfive);
+game.state.add('lvlfour', lvlfour);
 game.state.add('lvlthree', lvlthree);
 game.state.add('lvltwo', lvltwo);
 game.state.add('lvlone', lvlone);

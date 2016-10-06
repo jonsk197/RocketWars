@@ -20,34 +20,34 @@ var chooseLevel = {
     
     update: function(){
         
-        if(this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
+        if(this.input.keyboard.isDown(Phaser.Keyboard.ESC))
         {
             game.state.start('menu');
         }
     },
 
     startLevel1: function(){
-    	mainGame.level = 1;
+    	menu.level = 1;
     	game.state.start('mainGame');
     },
 
     startLevel2: function(){
-    	mainGame.level = 2;
+    	menu.level = 2;
     	game.state.start('mainGame');
     },
 
     startLevel3: function(){
-		mainGame.level = 3;
+		menu.level = 3;
     	game.state.start('mainGame');
     },
 
     startLevel4: function(){
-    	mainGame.level = 4;
+    	menu.level = 4;
     	game.state.start('mainGame');
     },
 
     startLevel5: function(){
-    	mainGame.level = 5;
+    	menu.level = 5;
     	game.state.start('mainGame');
     },
 };
