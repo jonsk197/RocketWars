@@ -120,6 +120,14 @@ var multiplayer = {
         //Reset the players velocity (movement)
         player.body.velocity.x = 0;
         player2.body.velocity.x = 0;
+
+        //Set the bazooka's possition on the player
+        bazooka.x = player.x + 15;
+        bazooka.y = player.y + 33;
+        //Set the bazooka's possition on the player2
+        bazooka2.x = player2.x + 15;
+        bazooka2.y = player2.y + 33;
+
         turn = 0;
         if (turn ==0 ) {
 
@@ -142,9 +150,6 @@ var multiplayer = {
                 player.frame = 1;
             }
 
-            //Set the bazooka's possition on the player
-            bazooka.x = player.x + 15;
-            bazooka.y = player.y + 33;
             
             //Change the angle of the bazooka
             if (cursors.up.isDown)
@@ -172,11 +177,12 @@ var multiplayer = {
                 this.fireBullet(diff);
 
                 spacebarJustPressed = false;
+                turn= turn +1;
             }
-            turn= turn +1;
+            
         }
 
-         else if(turn ==1){
+         else {
             if (cursors.left.isDown)
             {
                 //Move to the left
@@ -196,9 +202,7 @@ var multiplayer = {
                 player2.frame = 1;
             }
 
-            //Set the bazooka's possition on the player2
-            bazooka2.x = player2.x + 15;
-            bazooka2.y = player2.y + 33;
+            
             
             //Change the angle of the bazooka
             if (cursors.up.isDown)
@@ -276,7 +280,7 @@ var multiplayer = {
         
         console.log("player2 win");
         player2.kill();
-        bazooka.kill();
+        bazooka2.kill();
     },
   
 
