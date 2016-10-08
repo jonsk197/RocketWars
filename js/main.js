@@ -6,5 +6,6 @@ game.state.add('chooseLevel', chooseLevel);
 game.state.add('gameover', gameover);
 game.state.add('menu', menu);
 game.state.add("mainGame", mainGame);
+game.state.add("MultiplayerWiner", MultiplayerWiner);
 game.state.add('multiplayer', multiplayer);
 game.state.start('loadingScreen');

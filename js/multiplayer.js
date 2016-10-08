@@ -93,6 +93,7 @@ var multiplayer = {
         life=2;
         level = 1;
         turn = 0;
+        var winner=0;
 
         spacebarJustPressed = false;
         startPressSpaceTime = 0;
@@ -286,6 +287,9 @@ var multiplayer = {
         console.log("player2 win");
         player.kill();
         bazooka.kill();
+        multiplayer.winner=1;
+        game.state.start('MultiplayerWiner');
+
     },
 
      playerWin: function(player2, lava) {
@@ -293,6 +297,8 @@ var multiplayer = {
         console.log("player2 win");
         player2.kill();
         bazooka2.kill();
+        multiplayer.winner=0;
+        game.state.start('MultiplayerWiner');
     },
   
 
