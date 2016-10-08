@@ -6,6 +6,7 @@ var chooseLevel = {
         game.load.spritesheet('level3', 'assets/images/level3.png');
         game.load.spritesheet('level4', 'assets/images/level4.png');
         game.load.spritesheet('level5', 'assets/images/level5.png');
+        game.load.spritesheet('pressESC', 'assets/images/pressESC.png');
     },
 
     create: function(){
@@ -16,6 +17,9 @@ var chooseLevel = {
     	this.start = this.add.button(150, 220, 'level3', this.startLevel3, this);
     	this.start = this.add.button(150, 280, 'level4', this.startLevel4, this);
     	this.start = this.add.button(150, 340, 'level5', this.startLevel5, this);      
+
+        this.add.sprite(220, 450,'pressESC');
+    
     },
     
     update: function(){

@@ -13,10 +13,11 @@ var mainGame = {
         var bulletGravity;
         var target;
         var life;
+        var lifeText;
+        var levelText;
         var spacebar;
         var spacebarJustPressed;
         var startPressSpaceTime;
-
         },
 
     preload: function() {
@@ -82,6 +83,10 @@ var mainGame = {
         //Set number of lifes for the target
         life = 1;
 
+        levelText = game.add.text(16, 16, 'Level: ' + menu.level, { fontSize: '20px', fill: '#000' });
+
+        lifeText = game.add.text(16, 40, 'Life of target: ' + life, { fontSize: '20px', fill: '#000' });
+
         spacebarJustPressed = false;
         startPressSpaceTime = 0;
 
@@ -110,6 +115,8 @@ var mainGame = {
             lvlfive.initBricks();
             life = 5;
         }
+        lifeText.text = 'Life of target: ' + life;
+        levelText.text = 'Level: ' + menu.level;
 
     },
 
@@ -254,6 +261,7 @@ var mainGame = {
                 game.state.start('menu');
             }
             menu.level++;
+            levelText.text = 'Level: ' + menu.level;
             player.x = 32;
             player.y = 350;
             target.x = 600;
@@ -261,6 +269,8 @@ var mainGame = {
             target.body.velocity.x = 0; 
             target.body.velocity.y = 0;
         }
+
+        lifeText.text = 'Life of target: ' + life;
     },
 
     targetHitsLava: function(target, lava) {
