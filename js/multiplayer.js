@@ -18,8 +18,7 @@ var multiplayer = {
         var spacebarJustPressed;
         var startPressSpaceTime;
         var turn;
-        var changebullet;
-        },
+    },
 
     preload: function() {
         this.load.image('background', 'assets/images/background.png');
@@ -92,6 +91,7 @@ var multiplayer = {
         //Set number of lifes for the target
         life=2;
         level = 1;
+        turn = 0;
 
         spacebarJustPressed = false;
         startPressSpaceTime = 0;
@@ -105,7 +105,6 @@ var multiplayer = {
 
     update: function() {
 
-     
         //Check collisions between player,lava, bricks and bullets 
         this.physics.arcade.collide(player, bricks);
         this.physics.arcade.collide(player2, bricks);
@@ -128,9 +127,9 @@ var multiplayer = {
         bazooka2.x = player2.x + 15;
         bazooka2.y = player2.y + 33;
 
-        turn = 0;
-        if (turn ==0 ) {
 
+        switch(turn) {
+        case 0:
             if (cursors.left.isDown)
             {
                 //Move to the left
@@ -177,12 +176,11 @@ var multiplayer = {
                 this.fireBullet(diff);
 
                 spacebarJustPressed = false;
-                turn= turn +1;
             }
-            
-        }
+            break;
 
-         else {
+
+        case 1:
             if (cursors.left.isDown)
             {
                 //Move to the left
@@ -231,7 +229,7 @@ var multiplayer = {
 
                 spacebarJustPressed = false;
             }
-            turn= turn -1;
+            break;
         }
     },
 
@@ -241,26 +239,30 @@ var multiplayer = {
 
     fireBullet: function(diff) {
 
-        changebullet = 0;
         if (multiplayer.time.now > bulletTime)
         {
             bullet = bullets.getFirstExists(false);
             if (bullet)
             {
-                if (changebullet==0){
+                switch(turn) {
+                case 0:
                     bullet.angle = bazooka.angle
                     bullet.reset(bazooka.x, bazooka.y - 6);
                     bullet.body.velocity = this.physics.arcade.velocityFromAngle(bullet.angle, diff, bullet.velocity);
                     bullet.body.gravity.y=bulletGravity;
                     bulletTime = multiplayer.time.now + 500;
-                }
-                else if (changebullet==1){
+                    turn = 1;
+                    break;
+                case 1:
                     bullet.angle = bazooka2.angle
                     bullet.reset(bazooka2.x, bazooka2.y - 6);
                     bullet.body.velocity = this.physics.arcade.velocityFromAngle(bullet.angle, diff, bullet.velocity);
                     bullet.body.gravity.y=bulletGravity;
-                    bulletTime = multiplayer.time.now + 500;}
-            }
+                    bulletTime = multiplayer.time.now + 500;
+                    turn = 0;
+                    break;
+                }
+            }       
         }
     },
 
