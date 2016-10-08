@@ -18,6 +18,7 @@ var multiplayer = {
         var spacebarJustPressed;
         var startPressSpaceTime;
         var turn;
+        var turnText;
     },
 
     preload: function() {
@@ -29,7 +30,7 @@ var multiplayer = {
         this.load.spritesheet('player2', 'assets/images/sprite_short_man.png', 35 ,50);
         this.load.spritesheet('target', 'assets/images/targetBoard.png');
         this.load.image('bazooka', 'assets/images/bazooka.png');
-        this.load.image('bazooka2', 'assets/images/bazooka.png');
+        this.load.image('bazooka2', 'assets/images/bazooka2.png');
         this.load.image('bullet', 'assets/images/bullet.png');
     },
 
@@ -45,8 +46,8 @@ var multiplayer = {
         lava1.scale.setTo(2, 1);
 
         //The player and its settings
-        player = this.add.sprite(32, this.world.height - 250, 'player');
-        player2 = this.add.sprite(100, this.world.height - 250, 'player2');
+        player = this.add.sprite(32, this.world.height - 450, 'player');
+        player2 = this.add.sprite(738, this.world.height - 450, 'player2');
 
         //We need to enable physics on the player
         this.physics.arcade.enable(player);
@@ -96,11 +97,14 @@ var multiplayer = {
         spacebarJustPressed = false;
         startPressSpaceTime = 0;
 
+
+        turnText = game.add.text(260, 40, 'Turn for player 1', { fontSize: '32px', fill: '#000' });
+
         // Our controls.
         cursors = this.input.keyboard.createCursorKeys();
         this.spacebar = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         //Add the bricks to the map
-        lvlone.initBricks();
+        lvlTowers.initBricks();
     },
 
     update: function() {
@@ -197,7 +201,7 @@ var multiplayer = {
             {
                 //Stand still
                 player2.animations.stop();
-                player2.frame = 1;
+                player2.frame = 0;
             }
 
             
@@ -231,6 +235,10 @@ var multiplayer = {
             }
             break;
         }
+        if(this.input.keyboard.isDown(Phaser.Keyboard.ESC))
+        {
+            game.state.start('menu');
+        }
     },
 
     getlength: function(number) {
@@ -246,20 +254,22 @@ var multiplayer = {
             {
                 switch(turn) {
                 case 0:
-                    bullet.angle = bazooka.angle
+                    bullet.angle = bazooka.angle;
                     bullet.reset(bazooka.x, bazooka.y - 6);
                     bullet.body.velocity = this.physics.arcade.velocityFromAngle(bullet.angle, diff, bullet.velocity);
                     bullet.body.gravity.y=bulletGravity;
                     bulletTime = multiplayer.time.now + 500;
                     turn = 1;
+                    turnText.text = 'Turn for player 2';
                     break;
                 case 1:
-                    bullet.angle = bazooka2.angle
+                    bullet.angle = 180 + bazooka2.angle;
                     bullet.reset(bazooka2.x, bazooka2.y - 6);
                     bullet.body.velocity = this.physics.arcade.velocityFromAngle(bullet.angle, diff, bullet.velocity);
                     bullet.body.gravity.y=bulletGravity;
                     bulletTime = multiplayer.time.now + 500;
                     turn = 0;
+                    turnText.text = 'Turn for player 1';
                     break;
                 }
             }       
