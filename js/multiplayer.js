@@ -19,7 +19,11 @@ var multiplayer = {
         var startPressSpaceTime;
         var turn;
         var turnText;
+        var intro;
+        var explosion;
+        var music;
     },
+
 
     preload: function() {
         this.load.image('background', 'assets/images/background.png');
@@ -32,13 +36,21 @@ var multiplayer = {
         this.load.image('bazooka', 'assets/images/bazooka.png');
         this.load.image('bazooka2', 'assets/images/bazooka2.png');
         this.load.image('bullet', 'assets/images/bullet.png');
+        this.load.audio('intro', ['assets/audio/oedipus_wizball_highscore.mp3', 'assets/audio/oedipus_wizball_highscore.ogg']);
+        this.load.audio('explosion', 'assets/audio/explosion.mp3');
+
     },
+
 
     create: function() {
         //Enable the Arcade Physics system
         this.physics.startSystem(Phaser.Physics.ARCADE);
         this.add.sprite(0, 0, 'background');
-
+        music = this.add.audio('intro');
+        console.log(music);
+        music.play();
+       // explosion= game.add.audio('explosion');
+       // intro=game.add.audio('intro');
         //Enable physics for the lava & create the lava-group
         lava = this.add.group();
         lava.enableBody = true;
@@ -106,10 +118,10 @@ var multiplayer = {
         this.spacebar = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         //Add the bricks to the map
         lvlTowers.initBricks();
+        
     },
 
     update: function() {
-
         //Check collisions between player,lava, bricks and bullets 
         this.physics.arcade.collide(player, bricks);
         this.physics.arcade.collide(player2, bricks);

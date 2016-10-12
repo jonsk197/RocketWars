@@ -29,13 +29,16 @@ var mainGame = {
         this.load.spritesheet('target', 'assets/images/targetBoard.png');
         this.load.image('bazooka', 'assets/images/bazooka.png');
         this.load.image('bullet', 'assets/images/bullet.png');
+        this.load.audio('intro', ['assets/audio/oedipus_wizball_highscore.mp3', 'assets/audio/oedipus_wizball_highscore.ogg']);
+
     },
 
     create: function() {
         //Enable the Arcade Physics system
         this.physics.startSystem(Phaser.Physics.ARCADE);
         this.add.sprite(0, 0, 'background');
-
+        music = this.add.audio('intro');
+        music.play();
         //Enable physics for the lava & create the lava-group
         lava = this.add.group();
         lava.enableBody = true;
