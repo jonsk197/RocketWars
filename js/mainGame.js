@@ -18,6 +18,7 @@ var mainGame = {
         var spacebar;
         var spacebarJustPressed;
         var startPressSpaceTime;
+        var explosion;
         },
 
     preload: function() {
@@ -30,7 +31,7 @@ var mainGame = {
         this.load.image('bazooka', 'assets/images/bazooka.png');
         this.load.image('bullet', 'assets/images/bullet.png');
         this.load.audio('intro', ['assets/audio/oedipus_wizball_highscore.mp3', 'assets/audio/oedipus_wizball_highscore.ogg']);
-
+        this.load.audio('explosion', 'assets/audio/explosion.mp3');
     },
 
     create: function() {
@@ -39,6 +40,7 @@ var mainGame = {
         this.add.sprite(0, 0, 'background');
         music = this.add.audio('intro');
         music.play();
+        explosion =this.add.audio('explosion');
         //Enable physics for the lava & create the lava-group
         lava = this.add.group();
         lava.enableBody = true;
@@ -232,7 +234,7 @@ var mainGame = {
         
         life = life -1;
         bullets.kill();
-
+        explosion.play();
         if (life ==0){
             console.log('next level! Level completted:' +  menu.level);
 
@@ -286,6 +288,7 @@ var mainGame = {
     bulletHitBrick:  function (bullets, bricks) {
         bricks.kill();
         bullets.kill();
+        explosion.play();
     },
 
     gameOver: function(player, lava) {

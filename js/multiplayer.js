@@ -49,6 +49,7 @@ var multiplayer = {
         music = this.add.audio('intro');
         console.log(music);
         music.play();
+        explosion = this.add.audio('explosion');
        // explosion= game.add.audio('explosion');
        // intro=game.add.audio('intro');
         //Enable physics for the lava & create the lava-group
@@ -317,6 +318,7 @@ var multiplayer = {
     bulletHitBrick:  function (bullets, bricks) {
         bricks.kill();
         bullets.kill();
+        explosion.play();
     },
     playersCollision: function(player, player2){
 
