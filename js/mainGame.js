@@ -22,9 +22,12 @@ var mainGame = {
         var infoRect;
         var instructions;
         var instruction_label;
+        var mute;
         var explosion;
         var music;
+        var muteTime;
         var facing;
+        var keyboard;
         },
 
     preload: function() {
@@ -32,6 +35,7 @@ var mainGame = {
         this.load.image('smallTile', 'assets/images/smallTile.png');
         this.load.image('bigTile', 'assets/images/bigTile.png');
         this.load.image('lava', 'assets/images/lava.png');
+        this.load.image('keyboard', 'assets/images/keyboard.png');
         this.load.spritesheet('player', 'assets/images/sprite_short_man.png',35 ,50);
         this.load.spritesheet('target', 'assets/images/targetBoard.png');
         this.load.spritesheet('bazooka', 'assets/images/bazookaSprite.png',50 ,27);
@@ -50,7 +54,7 @@ var mainGame = {
 
         graphics = game.add.graphics(0,0);
         graphics.lineStyle(0);
-        graphics.beginFill(0xFF0000, 0.6);
+        graphics.beginFill(0xffba00, 0.6);
 
         //Enable physics for the lava & create the lava-group
         lava = this.add.group();
@@ -100,8 +104,10 @@ var mainGame = {
         bulletGravity= 200;
         //initialize bulletTime
         bulletTime = 0;
+        muteTime = 0;
         //Set number of lifes for the target
         life = 1;
+        mute = false;
         facing = 'left';
 
         levelText = game.add.text(16, 16, 'Level: ' + menu.level, { fontSize: '20px', fill: '#000' });
@@ -111,16 +117,24 @@ var mainGame = {
         spacebarJustPressed = false;
         startPressSpaceTime = 0;
 
-        instruction_label = game.add.text(700, 20, 'Help!', { font: '24px Arial', fill: '#FF0000' });
+        keyboard = this.add.group();
+        var keyboard1 = keyboard.create(500, 500, 'keyboard');
+        keyboard.scale.setTo(0.3, 0.3);
+        keyboard.alpha = 0.9;
+
+        instruction_label = game.add.text(700, 20, 'Help!', { font: '24px Arial', fill: '#ffba00' });
         instruction_label.inputEnabled = true;
         instruction_label.events.onInputUp.add(function(){
              // Then add the help instructions
-            instructions = game.add.text(150, 150, 'Press the spacebar to shot! Hold it to shot harder.', { font: '24px Arial', fill: '#000' });
+            instructions = game.add.text(140, 80, 'Press the spacebar to shot, hold it to shoot harder!\n Use arrows to move and aim.', { font: '24px Arial', align: "center", fill: '#000' });
             infoRect.visible = true;
+            keyboard.visible = true;
         });
         // Add a input listener that can help us return from being paused
         game.input.onDown.add(this.removeInstructions, self);
 
+        muteText = game.add.text(600, 20, 'Mute', { font: '24px Arial', fill: '#000' });
+        
         // Our controls.
         cursors = this.input.keyboard.createCursorKeys();
         this.spacebar = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -232,6 +246,14 @@ var mainGame = {
             this.removeInstructions();
         }
 
+        if(this.input.keyboard.isDown(Phaser.Keyboard.P))
+        {
+            if(mainGame.time.now > muteTime){
+                this.pauseMusic();
+                muteTime=mainGame.time.now +100;
+            }
+        }
+
         if(this.input.keyboard.isDown(Phaser.Keyboard.ESC))
         {
             game.state.start('menu');
@@ -329,15 +351,32 @@ var mainGame = {
     
     showInstructions: function(){
         // Then add the help instructions
-        infoRect=graphics.drawRect(100, 100, 600, 200);
-        instructions = game.add.text(150, 150, 'Press the spacebar to shot! Hold it to shot harder.', { font: '24px Arial', fill: '#000' });
+        infoRect=graphics.drawRect(100, 70, 600, 280);
+        instructions = game.add.text(140, 80, 'Press the spacebar to shot, hold it to shoot harder!\n Use arrows to move and aim.', { font: '24px Arial', align: "center", fill: '#000' });
         instructions.inputEnabled = true;
+        keyboard.visible = true;
     },
 
     removeInstructions: function(){
         instructions.destroy();
         infoRect.visible = false;
+        keyboard.visible = false;
         //infoRect.destroy();
+    },
+
+    pauseMusic: function(){
+        muteText.destroy();
+        if(mute){
+            muteText = game.add.text(600, 20, 'Unmute', { font: '24px Arial', fill: '#000' });
+            mute = false;
+            music.pause();
+        }
+        else
+        {
+            muteText = game.add.text(600, 20, 'Mute', { font: '24px Arial', fill: '#000' });
+            mute = true;
+            music.resume();
+        }
     },
 
     bulletHitBrick:  function (bullets, bricks) {

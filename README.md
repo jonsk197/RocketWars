@@ -17,5 +17,4 @@ Start a MAMP-server and add the code to the localhost folder. Name the folder Ro
 The character
 --------------
 
-This is the cool character:
 ![alt tag](https://github.com/jonsk197/RocketWars/blob/master/assets/gif/gif_man.gif)
