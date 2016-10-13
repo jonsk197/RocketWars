@@ -47,7 +47,6 @@ var multiplayer = {
         this.physics.startSystem(Phaser.Physics.ARCADE);
         this.add.sprite(0, 0, 'background');
         music = this.add.audio('intro');
-        console.log(music);
         music.play();
         explosion = this.add.audio('explosion');
        // explosion= game.add.audio('explosion');

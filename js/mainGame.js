@@ -18,7 +18,12 @@ var mainGame = {
         var spacebar;
         var spacebarJustPressed;
         var startPressSpaceTime;
+        var graphics;
+        var infoRect;
+        var instructions;
+        var instruction_label;
         var explosion;
+        var music;
         },
 
     preload: function() {
@@ -30,7 +35,7 @@ var mainGame = {
         this.load.spritesheet('target', 'assets/images/targetBoard.png');
         this.load.image('bazooka', 'assets/images/bazooka.png');
         this.load.image('bullet', 'assets/images/bullet.png');
-        this.load.audio('intro', ['assets/audio/oedipus_wizball_highscore.mp3', 'assets/audio/oedipus_wizball_highscore.ogg']);
+        this.load.audio('music', ['assets/audio/oedipus_wizball_highscore.mp3', 'assets/audio/oedipus_wizball_highscore.ogg']);
         this.load.audio('explosion', 'assets/audio/explosion.mp3');
     },
 
@@ -38,9 +43,14 @@ var mainGame = {
         //Enable the Arcade Physics system
         this.physics.startSystem(Phaser.Physics.ARCADE);
         this.add.sprite(0, 0, 'background');
-        music = this.add.audio('intro');
-        music.play();
         explosion =this.add.audio('explosion');
+        music = this.add.audio('music');
+        music.play();
+
+        graphics = game.add.graphics(0,0);
+        graphics.lineStyle(0);
+        graphics.beginFill(0xFF0000, 0.6);
+
         //Enable physics for the lava & create the lava-group
         lava = this.add.group();
         lava.enableBody = true;
@@ -95,13 +105,24 @@ var mainGame = {
         spacebarJustPressed = false;
         startPressSpaceTime = 0;
 
+        instruction_label = game.add.text(700, 20, 'Help!', { font: '24px Arial', fill: '#FF0000' });
+        instruction_label.inputEnabled = true;
+        instruction_label.events.onInputUp.add(function(){
+             // Then add the help instructions
+            instructions = game.add.text(150, 150, 'Press the spacebar to shot! Hold it to shot harder.', { font: '24px Arial', fill: '#000' });
+            infoRect.visible = true;
+        });
+        // Add a input listener that can help us return from being paused
+        game.input.onDown.add(this.removeInstructions, self);
+
         // Our controls.
         cursors = this.input.keyboard.createCursorKeys();
         this.spacebar = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         //Add the bricks to the map
-            
+
         if(menu.level == 1){
             lvlone.initBricks();
+            this.showInstructions();
             life = 1;
         }else if(menu.level == 2)
         {
@@ -129,7 +150,7 @@ var mainGame = {
 
         if(menu.level == 2 || menu.level == 5){
             //Movable target
-            var period = Math.abs(game.time.now * 0.002);
+            var period = Math.abs(game.time.now * 0.001);
             var radius = 60;
             target.x = 600 + Math.cos(period) * radius;
             target.y = 200 + Math.sin(period) * radius;
@@ -197,6 +218,8 @@ var mainGame = {
             this.fireBullet(diff);
 
             spacebarJustPressed = false;
+
+            this.removeInstructions();
         }
 
         if(this.input.keyboard.isDown(Phaser.Keyboard.ESC))
@@ -217,6 +240,7 @@ var mainGame = {
             bullet = bullets.getFirstExists(false);
             if (bullet)
             {
+                explosion.play();
                 bullet.angle = bazooka.angle
                 bullet.reset(bazooka.x, bazooka.y - 6);
                 bullet.body.velocity = this.physics.arcade.velocityFromAngle(bullet.angle, diff, bullet.velocity);
@@ -235,6 +259,7 @@ var mainGame = {
         life = life -1;
         bullets.kill();
         explosion.play();
+
         if (life ==0){
             console.log('next level! Level completted:' +  menu.level);
 
@@ -282,7 +307,21 @@ var mainGame = {
         
         console.log("Target is dead");
         target.kill();
+
         game.state.start('gameover');
+    },
+    
+    showInstructions: function(){
+        // Then add the help instructions
+        infoRect=graphics.drawRect(100, 100, 600, 200);
+        instructions = game.add.text(150, 150, 'Press the spacebar to shot! Hold it to shot harder.', { font: '24px Arial', fill: '#000' });
+        instructions.inputEnabled = true;
+    },
+
+    removeInstructions: function(){
+        instructions.destroy();
+        infoRect.visible = false;
+        //infoRect.destroy();
     },
 
     bulletHitBrick:  function (bullets, bricks) {
