@@ -24,6 +24,7 @@ var mainGame = {
         var instruction_label;
         var explosion;
         var music;
+        var facing;
         },
 
     preload: function() {
@@ -31,9 +32,9 @@ var mainGame = {
         this.load.image('smallTile', 'assets/images/smallTile.png');
         this.load.image('bigTile', 'assets/images/bigTile.png');
         this.load.image('lava', 'assets/images/lava.png');
-        this.load.spritesheet('player', 'assets/images/sprite_short_man.png', 35 ,50);
+        this.load.spritesheet('player', 'assets/images/sprite_short_man.png',35 ,50);
         this.load.spritesheet('target', 'assets/images/targetBoard.png');
-        this.load.image('bazooka', 'assets/images/bazooka.png');
+        this.load.spritesheet('bazooka', 'assets/images/bazookaSprite.png',50 ,27);
         this.load.image('bullet', 'assets/images/bullet.png');
         this.load.audio('music', ['assets/audio/oedipus_wizball_highscore.mp3', 'assets/audio/oedipus_wizball_highscore.ogg']);
         this.load.audio('explosion', 'assets/audio/explosion.mp3');
@@ -72,16 +73,20 @@ var mainGame = {
         player.animations.add('left', [0], 1, true);
         player.animations.add('right', [2], 1, true);
 
+        //The bazooka and its settings
+        bazooka = this.add.sprite(player.x, player.y, 'bazooka');
+        bazooka.anchor.setTo(0.5, 0.5);
+
+        //Turn the bazooka the same way as the player
+        bazooka.animations.add('left', [0], 1, true);
+        bazooka.animations.add('right', [1], 1, true);
+
         //The target and its settings
         target = this.add.sprite(600, 200, 'target');
         this.physics.arcade.enable(target);
         target.body.gravity.y = 300;
         target.body.collideWorldBounds = true;
         target.scale.setTo(0.5, 0.5);
-        
-        //The bazooka and its settings
-        bazooka = this.add.sprite(player.x, player.y, 'bazooka');
-        bazooka.anchor.setTo(0.5, 0.5);
         
         //We also need some bullets to shot
         bullets = game.add.group();
@@ -97,6 +102,7 @@ var mainGame = {
         bulletTime = 0;
         //Set number of lifes for the target
         life = 1;
+        facing = 'left';
 
         levelText = game.add.text(16, 16, 'Level: ' + menu.level, { fontSize: '20px', fill: '#000' });
 
@@ -174,18 +180,22 @@ var mainGame = {
             //Move to the left
             player.body.velocity.x = -150;
             player.animations.play('left');
+            bazooka.animations.play('left');
+            facing = 'left';
         }
         else if (cursors.right.isDown)
         {
             //Move to the right
             player.body.velocity.x = 150;
             player.animations.play('right');
+            bazooka.animations.play('right');
+            facing = 'right';
         }
         else
         {
             //Stand still
             player.animations.stop();
-            player.frame = 1;
+            bazooka.animations.stop();
         }
 
         //Set the bazooka's possition on the player
@@ -234,18 +244,24 @@ var mainGame = {
     },   
 
     fireBullet: function(diff) {
-
+        
         if (mainGame.time.now > bulletTime)
         {
             bullet = bullets.getFirstExists(false);
             if (bullet)
             {
+                if(facing == 'right')
+                {   
+                    
+                    bullet.angle = bazooka.angle
+                }else if( facing == 'left'){
+                    bullet.angle = bazooka.angle + 180;
+                }
                 explosion.play();
-                bullet.angle = bazooka.angle
                 bullet.reset(bazooka.x, bazooka.y - 6);
                 bullet.body.velocity = this.physics.arcade.velocityFromAngle(bullet.angle, diff, bullet.velocity);
                 bullet.body.gravity.y = bulletGravity;
-                bulletTime = mainGame.time.now + 500;
+                bulletTime = mainGame.time.now + 500;       
             }
         }
     },
