@@ -17,7 +17,6 @@ var mainGame = {
         var levelText;
         var spacebar;
         var spacebarJustPressed;
-        var startPressSpaceTime;
         var graphics;
         var infoRect;
         var instructions;
@@ -47,16 +46,22 @@ var mainGame = {
     create: function() {
         //Enable the Arcade Physics system
         this.physics.startSystem(Phaser.Physics.ARCADE);
+        //Add the background
         this.add.sprite(0, 0, 'background');
-        explosion =this.add.audio('explosion');
+
+        //Add the music and start playing the music 
         music = this.add.audio('music');
         music.play();
 
+        //Create the explosion sound
+        explosion = this.add.audio('explosion');
+        
+        //Enable graphics for the buttons used in the game
         graphics = game.add.graphics(0,0);
         graphics.lineStyle(0);
         graphics.beginFill(0xffba00, 0.6);
 
-        //Enable physics for the lava & create the lava-group
+        //Enable physics for the lava & create the lava-group. Also scale the lava to fit the screen.
         lava = this.add.group();
         lava.enableBody = true;
         var lava1 = lava.create(0, this.world.height - 50, 'lava');
@@ -100,28 +105,31 @@ var mainGame = {
         bullets.callAll('events.onOutOfBounds.add', 'events.onOutOfBounds', this.resetBullet, this);
         bullets.setAll('checkWorldBounds', true);
 
-        //Set the gravity of the bullet
+        //Varaiable seting the gravity of the bullet
         bulletGravity= 200;
+        //Varaiable set number of lifes for the target
+        life=1;
+        //Varaiables defining if the player faceing left or right?
+        facing = 'left';
+        //Varaiable to calculate for how long the spacebar has been pressed.
+        spacebarJustPressed = false;
         //initialize bulletTime
         bulletTime = 0;
+        //initialize muteTime and the state of the mute
         muteTime = 0;
-        //Set number of lifes for the target
-        life = 1;
         mute = false;
-        facing = 'left';
 
+        //Add text to the screen telling the player what level he is on and how many lifes the target has. 
         levelText = game.add.text(16, 16, 'Level: ' + menu.level, { fontSize: '20px', fill: '#000' });
-
         lifeText = game.add.text(16, 40, 'Life of target: ' + life, { fontSize: '20px', fill: '#000' });
 
-        spacebarJustPressed = false;
-        startPressSpaceTime = 0;
-
+        //Add the sprite of a keyboard the instructions
         keyboard = this.add.group();
         var keyboard1 = keyboard.create(500, 500, 'keyboard');
         keyboard.scale.setTo(0.3, 0.3);
         keyboard.alpha = 0.9;
 
+        //Add the button for help.
         instruction_label = game.add.text(700, 20, 'Help!', { font: '24px Arial', fill: '#ffba00' });
         instruction_label.inputEnabled = true;
         instruction_label.events.onInputUp.add(function(){
@@ -138,8 +146,8 @@ var mainGame = {
         // Our controls.
         cursors = this.input.keyboard.createCursorKeys();
         this.spacebar = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-        //Add the bricks to the map
-
+        
+        //Check what level and load the map.
         if(menu.level == 1){
             lvlone.initBricks();
             this.showInstructions();
@@ -167,7 +175,6 @@ var mainGame = {
     },
 
     update: function() {
-
         if(menu.level == 2 || menu.level == 5){
             //Movable target
             var period = Math.abs(game.time.now * 0.001);
@@ -239,7 +246,14 @@ var mainGame = {
             var diff = Math.abs(this.spacebar.timeUp - this.spacebar.timeDown);
             //console.log("Diff: " + diff);
 
-            this.fireBullet(diff);
+            //Check so we dont shot to hard. Limite the speed of the bullet to.
+                if(diff>1500){
+                    this.fireBullet(1500);
+                }
+                else
+                {
+                    this.fireBullet(diff);
+                }
 
             spacebarJustPressed = false;
 
@@ -250,7 +264,7 @@ var mainGame = {
         {
             if(mainGame.time.now > muteTime){
                 this.pauseMusic();
-                muteTime=mainGame.time.now +100;
+                muteTime=mainGame.time.now +500;
             }
         }
 
@@ -261,10 +275,6 @@ var mainGame = {
 
     },
 
-    getlength: function(number) {
-    return number.toString().length;
-    },   
-
     fireBullet: function(diff) {
         
         if (mainGame.time.now > bulletTime)
@@ -274,16 +284,17 @@ var mainGame = {
             {
                 if(facing == 'right')
                 {   
-                    
                     bullet.angle = bazooka.angle
                 }else if( facing == 'left'){
                     bullet.angle = bazooka.angle + 180;
                 }
-                explosion.play();
+                //Set the position, gravity and velocity for the bullet
                 bullet.reset(bazooka.x, bazooka.y - 6);
                 bullet.body.velocity = this.physics.arcade.velocityFromAngle(bullet.angle, diff, bullet.velocity);
                 bullet.body.gravity.y = bulletGravity;
+                //Set the bullet time so we can't shoot right away.
                 bulletTime = mainGame.time.now + 500;       
+                explosion.play();
             }
         }
     },
@@ -298,9 +309,10 @@ var mainGame = {
         bullets.kill();
         explosion.play();
 
+        //Check if the life of the target got to 0.
         if (life ==0){
             console.log('next level! Level completted:' +  menu.level);
-
+            //Check what level we should load next.
             if(menu.level == 1){
                 console.log('Start level 2');
                 lvlone.killBricks();
@@ -327,9 +339,10 @@ var mainGame = {
             }else if(menu.level == 5)
             {
                 game.state.start('menu');
-            }
+            } 
             menu.level++;
             levelText.text = 'Level: ' + menu.level;
+            //Reposition the player and the target
             player.x = 32;
             player.y = 350;
             target.x = 600;
@@ -342,15 +355,13 @@ var mainGame = {
     },
 
     targetHitsLava: function(target, lava) {
-        
         console.log("Target is dead");
         target.kill();
-
         game.state.start('gameover');
     },
     
     showInstructions: function(){
-        // Then add the help instructions
+        //Add and make the objects used for instructions visible
         infoRect=graphics.drawRect(100, 70, 600, 280);
         instructions = game.add.text(140, 80, 'Press the spacebar to shot, hold it to shoot harder!\n Use arrows to move and aim.', { font: '24px Arial', align: "center", fill: '#000' });
         instructions.inputEnabled = true;
@@ -358,13 +369,14 @@ var mainGame = {
     },
 
     removeInstructions: function(){
+        //Destroy and remove the objects used for instructions
         instructions.destroy();
         infoRect.visible = false;
         keyboard.visible = false;
-        //infoRect.destroy();
     },
 
     pauseMusic: function(){
+        //Toggle the mute/unmute button and pause the music.
         muteText.destroy();
         if(mute){
             muteText = game.add.text(600, 20, 'Unmute', { font: '24px Arial', fill: '#000' });
@@ -386,7 +398,6 @@ var mainGame = {
     },
 
     gameOver: function(player, lava) {
-        
         console.log("Game over");
         player.kill();
         bazooka.kill();

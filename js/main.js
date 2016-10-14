@@ -8,4 +8,5 @@ game.state.add('menu', menu);
 game.state.add("mainGame", mainGame);
 game.state.add("MultiplayerWiner", MultiplayerWiner);
 game.state.add('multiplayer', multiplayer);
+//Start the loadingscreen state.
 game.state.start('loadingScreen');

@@ -14,7 +14,6 @@ var loadingScreen = {
     
     updateCounter: function(){
         this.counter++;
-        
     },
     update: function(){
         if(this.counter == 2){
