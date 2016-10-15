@@ -23,10 +23,12 @@ var mainGame = {
         var instruction_label;
         var mute;
         var explosion;
+        var shot;
         var music;
         var muteTime;
         var facing;
         var keyboard;
+        var crosshair;
         },
 
     preload: function() {
@@ -38,9 +40,11 @@ var mainGame = {
         this.load.spritesheet('player', 'assets/images/sprite_short_man.png',35 ,50);
         this.load.spritesheet('target', 'assets/images/targetBoard.png');
         this.load.spritesheet('bazooka', 'assets/images/bazookaSprite.png',50 ,27);
+        this.load.image('crosshair', 'assets/images/crosshair.png');
         this.load.image('bullet', 'assets/images/bullet.png');
         this.load.audio('music', ['assets/audio/oedipus_wizball_highscore.mp3', 'assets/audio/oedipus_wizball_highscore.ogg']);
         this.load.audio('explosion', 'assets/audio/explosion.mp3');
+        this.load.audio('shot', 'assets/audio/shot.wav');
     },
 
     create: function() {
@@ -53,8 +57,9 @@ var mainGame = {
         music = this.add.audio('music');
         music.play();
 
-        //Create the explosion sound
+        //Create the explosion & shot sound
         explosion = this.add.audio('explosion');
+        shot = this.add.audio('shot');
         
         //Enable graphics for the buttons used in the game
         graphics = game.add.graphics(0,0);
@@ -96,7 +101,10 @@ var mainGame = {
         target.body.gravity.y = 300;
         target.body.collideWorldBounds = true;
         target.scale.setTo(0.5, 0.5);
-        
+
+        crosshair = this.add.sprite(bazooka.x +30, bazooka.y, 'crosshair');
+        crosshair.scale.setTo(0.1, 0.1);
+
         //We also need some bullets to shot
         bullets = game.add.group();
         bullets.enableBody = true;
@@ -222,6 +230,16 @@ var mainGame = {
         //Set the bazooka's possition on the player
         bazooka.x = player.x + 15;
         bazooka.y = player.y + 33;
+
+        if(facing == 'left'){
+            crosshair.x = bazooka.x - Math.cos(bazooka.angle * 0.018) * 150;
+            crosshair.y = bazooka.y - Math.sin(bazooka.angle * 0.018) * 150;
+        }else if(facing == 'right'){
+            crosshair.x = bazooka.x + Math.cos(bazooka.angle * 0.018) * 150;
+            crosshair.y = bazooka.y + Math.sin(bazooka.angle * 0.018) * 150;
+        }
+
+        console.log('x: '+ crosshair.x + "\ny: " + crosshair.y);
         
         //Change the angle of the bazooka
         if (cursors.up.isDown)
@@ -232,7 +250,6 @@ var mainGame = {
         {
             bazooka.angle -=2;
         }
-
         
         //Call the fire a bullet if the spacebar is pressed
         if(this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
@@ -294,7 +311,7 @@ var mainGame = {
                 bullet.body.gravity.y = bulletGravity;
                 //Set the bullet time so we can't shoot right away.
                 bulletTime = mainGame.time.now + 500;       
-                explosion.play();
+                shot.play();
             }
         }
     },

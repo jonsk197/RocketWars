@@ -20,6 +20,7 @@ var multiplayer = {
         var intro;
         var explosion;
         var music;
+        var shot;
         var facing1;
         var facing2;
     },
@@ -38,7 +39,7 @@ var multiplayer = {
         this.load.image('bullet', 'assets/images/bullet.png');
         this.load.audio('intro', ['assets/audio/oedipus_wizball_highscore.mp3', 'assets/audio/oedipus_wizball_highscore.ogg']);
         this.load.audio('explosion', 'assets/audio/explosion.mp3');
-
+        this.load.audio('shot', 'assets/audio/shot.wav');
     },
 
     create: function() {
@@ -50,8 +51,9 @@ var multiplayer = {
         music = this.add.audio('intro');
         music.play();
 
-        //Create the explosion sound
+        //Create the explosion & shot sound
         explosion = this.add.audio('explosion');
+        shot = this.add.audio('shot');
         
         //Enable physics for the lava & create the lava-group. Also scale the lava to fit the screen.
         lava = this.add.group();
@@ -314,6 +316,8 @@ var multiplayer = {
             bullet.reset(bazooka2.x, bazooka2.y - 6);
             bullet.body.velocity = this.physics.arcade.velocityFromAngle(bullet.angle, diff, bullet.velocity);
             bullet.body.gravity.y=bulletGravity;
+
+            shot.play();
 
             turn = 0;
             turnText.text = 'Turn for player 1';
