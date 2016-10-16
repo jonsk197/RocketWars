@@ -303,6 +303,8 @@ var multiplayer = {
             bullet.body.velocity = this.physics.arcade.velocityFromAngle(bullet.angle, diff, bullet.velocity);
             bullet.body.gravity.y=bulletGravity;
 
+            shot.play();
+            
             turn = 1;
             turnText.text = 'Turn for player 2';
             break;
@@ -335,8 +337,8 @@ var multiplayer = {
         player.kill();
         bazooka.kill();
         multiplayer.winner=1;
-        game.state.start('MultiplayerWiner');
         music.pause();
+        game.state.start('MultiplayerWiner');
     },
 
      playerWin: function(player2, lava) {  
@@ -344,8 +346,8 @@ var multiplayer = {
         player2.kill();
         bazooka2.kill();
         multiplayer.winner=0;
-        game.state.start('MultiplayerWiner');
         music.pause();
+        game.state.start('MultiplayerWiner');
     },
 
     bulletHitBrick:  function (bullets, bricks) {

@@ -149,6 +149,9 @@ var mainGame = {
         // Add a input listener that can help us return from being paused
         game.input.onDown.add(this.removeInstructions, self);
 
+        infoRect=graphics.drawRect(100, 70, 600, 280);
+        infoRect.visible = false;
+
         muteText = game.add.text(600, 20, 'Mute', { font: '24px Arial', fill: '#000' });
         
         // Our controls.
@@ -163,18 +166,22 @@ var mainGame = {
         }else if(menu.level == 2)
         {
             lvltwo.initBricks();
+            this.removeInstructions();
             life = 2;
         }else if(menu.level == 3)
         {
             lvlthree.initBricks();
+            this.removeInstructions();
             life = 3;
         }else if(menu.level == 4)
         {
             lvlfour.initBricks();
+            this.removeInstructions();
             life = 4;
         }else if(menu.level == 5)
         {
             lvlfive.initBricks();
+            this.removeInstructions();
             life = 5;
         }
         lifeText.text = 'Life of target: ' + life;
@@ -232,11 +239,11 @@ var mainGame = {
         bazooka.y = player.y + 33;
 
         if(facing == 'left'){
-            crosshair.x = bazooka.x - Math.cos(bazooka.angle * 0.018) * 150;
-            crosshair.y = bazooka.y - Math.sin(bazooka.angle * 0.018) * 150;
+            crosshair.x = bazooka.x - Math.cos(bazooka.angle * 0.018) * 100;
+            crosshair.y = bazooka.y - Math.sin(bazooka.angle * 0.018) * 100;
         }else if(facing == 'right'){
-            crosshair.x = bazooka.x + Math.cos(bazooka.angle * 0.018) * 150;
-            crosshair.y = bazooka.y + Math.sin(bazooka.angle * 0.018) * 150;
+            crosshair.x = bazooka.x + Math.cos(bazooka.angle * 0.018) * 100;
+            crosshair.y = bazooka.y + Math.sin(bazooka.angle * 0.018) * 100;
         }
 
         console.log('x: '+ crosshair.x + "\ny: " + crosshair.y);
@@ -380,8 +387,8 @@ var mainGame = {
     
     showInstructions: function(){
         //Add and make the objects used for instructions visible
-        infoRect=graphics.drawRect(100, 70, 600, 280);
         instructions = game.add.text(140, 80, 'Press the spacebar to shot, hold it to shoot harder!\n Use arrows to move and aim.', { font: '24px Arial', align: "center", fill: '#000' });
+        infoRect.visible = true;
         instructions.inputEnabled = true;
         keyboard.visible = true;
     },
@@ -419,7 +426,7 @@ var mainGame = {
         console.log("Game over");
         player.kill();
         bazooka.kill();
-        game.state.start('gameover');
         music.pause();
+        game.state.start('gameover');
     },
 };
