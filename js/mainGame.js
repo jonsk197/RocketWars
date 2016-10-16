@@ -420,5 +420,6 @@ var mainGame = {
         player.kill();
         bazooka.kill();
         game.state.start('gameover');
+        music.pause();
     },
 };

@@ -336,6 +336,7 @@ var multiplayer = {
         bazooka.kill();
         multiplayer.winner=1;
         game.state.start('MultiplayerWiner');
+        music.pause();
     },
 
      playerWin: function(player2, lava) {  
@@ -344,6 +345,7 @@ var multiplayer = {
         bazooka2.kill();
         multiplayer.winner=0;
         game.state.start('MultiplayerWiner');
+        music.pause();
     },
 
     bulletHitBrick:  function (bullets, bricks) {
