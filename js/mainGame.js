@@ -288,6 +288,7 @@ var mainGame = {
         if(this.input.keyboard.isDown(Phaser.Keyboard.ESC))
         {
             game.state.start('menu');
+            music.pause();
         }
 
     },
