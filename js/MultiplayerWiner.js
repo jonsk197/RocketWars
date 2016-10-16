@@ -13,7 +13,7 @@ var MultiplayerWiner = {
     
     create: function(){
         this.add.sprite(0,0, 'background');
-        this.add.sprite(100, 150, 'wineris');
+        this.add.sprite(138, 150, 'wineris');
         if (multiplayer.winner==0){
             this.add.sprite(360, 270, '1');
         }
