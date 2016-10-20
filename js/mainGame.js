@@ -192,12 +192,12 @@ var mainGame = {
     update: function() {
         if(menu.level == 2 || menu.level == 5){
             //Movable target
-            var period = Math.abs(game.time.now * 0.001);
+            var period = Math.abs(game.time.now * 0.001)%360;
             var radius = 60;
             target.x = 600 + Math.cos(period) * radius;
             target.y = 200 + Math.sin(period) * radius;
         }
-
+        console.log(game.time.now);
         //Check collisions between player,lava, bricks and bullets 
         this.physics.arcade.collide(player, bricks);
         this.physics.arcade.collide(target, bricks);
@@ -246,17 +246,27 @@ var mainGame = {
             crosshair.y = bazooka.y + Math.sin(bazooka.angle * 0.018) * 100;
         }
 
-        console.log('x: '+ crosshair.x + "\ny: " + crosshair.y);
-        
+                
         //Change the angle of the bazooka
-        if (cursors.up.isDown)
-        {
-            bazooka.angle += 2;
-        }
-        else if(cursors.down.isDown)
-        {
-            bazooka.angle -=2;
-        }
+            if (cursors.up.isDown)
+            {
+                if (facing == 'right'){
+                    bazooka.angle -= 2;
+                }
+                else {
+                    bazooka.angle +=2;
+                }
+            }
+            else if(cursors.down.isDown)
+            {
+               if (facing == 'right')
+               {
+                    bazooka.angle += 2;
+                }
+                else {
+                    bazooka.angle -=2;
+                }
+            }
         
         //Call the fire a bullet if the spacebar is pressed
         if(this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))

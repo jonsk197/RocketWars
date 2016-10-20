@@ -79,7 +79,7 @@ var multiplayer = {
         player.animations.add('right', [2], 1, true);
        
         //Player physics properties. Give the little guy a slight bounce. 
-        player2.body.bounce.y = 0.8;
+        player2.body.bounce.y = 0.2;
         player2.body.gravity.y = 300;
         player2.body.collideWorldBounds = true;
         
@@ -125,7 +125,7 @@ var multiplayer = {
         //Varaiable to calculate for how long the spacebar has been pressed.
         spacebarJustPressed = false;
         //Create text describing the turn
-        turnText = game.add.text(260, 40, 'Turn for player 1', { fontSize: '32px', fill: '#000' });
+        turnText = game.add.text(50, 40, 'Turn for player 1', { fontSize: '32px', fill: '#000' });
 
         // Our controls.
         cursors = this.input.keyboard.createCursorKeys();
@@ -187,11 +187,22 @@ var multiplayer = {
             //Change the angle of the bazooka
             if (cursors.up.isDown)
             {
-                bazooka.angle += 2;
+                if (facing1 == 'right'){
+                    bazooka.angle -= 2;
+                }
+                else {
+                    bazooka.angle +=2;
+                }
             }
             else if(cursors.down.isDown)
             {
-                bazooka.angle -=2;
+               if (facing1 == 'right')
+               {
+                    bazooka.angle += 2;
+                }
+                else {
+                    bazooka.angle -=2;
+                }
             }
 
             
@@ -248,13 +259,23 @@ var multiplayer = {
             //Change the angle of the bazooka
             if (cursors.up.isDown)
             {
-                bazooka2.angle += 2;
+                if (facing2 == 'right'){
+                    bazooka2.angle -= 2;
+                }
+                else {
+                    bazooka2.angle +=2;
+                }
             }
             else if(cursors.down.isDown)
             {
-                bazooka2.angle -=2;
+               if (facing2 == 'right')
+               {
+                    bazooka2.angle += 2;
+                }
+                else {
+                    bazooka2.angle -=2;
+                }
             }
-
             //Check if the spacebar just has been pressed
             if(this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
             {
@@ -307,6 +328,7 @@ var multiplayer = {
             
             turn = 1;
             turnText.text = 'Turn for player 2';
+            turnText.x = 500;
             break;
         case 1:
             if(facing2 == 'right')
@@ -324,6 +346,7 @@ var multiplayer = {
 
             turn = 0;
             turnText.text = 'Turn for player 1';
+            turnText.x=50;
             break;
         }
     },
